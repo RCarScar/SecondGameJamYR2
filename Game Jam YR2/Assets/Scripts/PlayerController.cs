@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(Rigidbody2D))]
@@ -8,7 +9,10 @@ public class PlayerController : MonoBehaviour
 
     // -------------------- Fields ------------------- //
     public float _Speed = 10f;
-    public float _Acceleration = 100f;
+    public float GroundAcceleration = 100f;
+    public float GroundDeceleration = 50f;
+    public float AirAcceleration = 50f;
+    public float AirDeceleration = 25f;
 
     [Header("Jump")]
     public float JumpForce = 10f;
@@ -21,17 +25,18 @@ public class PlayerController : MonoBehaviour
     [Min(0)] public float _CoyoteTime = 0.1f;
     [Min(0)] public float _JumpBuffer = 0.25f;
 
-    [Min(0)] public int JumpDisableFrames = 3;
+    [Min(0)] public float JumpDisableTime = 0.1f;
 
     [Header("Ground Check")]
     [Min(0)] public float GCRadius = 0.5f;
     public Vector2 GCPosition;
     public LayerMask GCMask;
 
-
     // -------------------- Components ------------------- //
     private Rigidbody2D rb;
 
+    // -------------------- Events ----------------------- //
+    [HideInInspector] public UnityEvent OnLand = new UnityEvent();
 
     // -------------------- Input ------------------- //
     private float MoveInput;
@@ -76,15 +81,23 @@ public class PlayerController : MonoBehaviour
         JumpAction = GameManager.actions.Game.Jump;
     }
 
-    void UpdateGrounded() => Grounded = Physics2D.OverlapCircle(transform.position + (Vector3)GCPosition, GCRadius, GCMask);
+    void UpdateGrounded()
+    {
+        var lastGrounded = Grounded;
+        Grounded = Physics2D.OverlapCircle(transform.position + (Vector3) GCPosition, GCRadius, GCMask);
+        if (Grounded && !lastGrounded) OnLand.Invoke(); //invoke event when the player lands on the ground
+    }
+
+    float CurrentAcceleration => Grounded ? GroundAcceleration : AirAcceleration;
+    float CurrentDeceleration => Grounded ? GroundDeceleration : AirDeceleration;
 
     void HandleMovement(float dt) //move the player with input
     {
-        vel = Mathf.MoveTowards(rb.velocity.x, _Speed * MoveInput, _Acceleration * dt);
+        vel = Mathf.MoveTowards(rb.velocity.x, _Speed * MoveInput, (MoveInput == 0 ? CurrentDeceleration : CurrentAcceleration) * dt);
         rb.velocity = new Vector2(vel, rb.velocity.y);
     }
 
-    private int _jumpDisableFrames = 0;
+    private float _jumpDisableTime = 0;
     void HandleJump(float dt)
     {
         if (JumpAction.triggered) jumpBuffer = _JumpBuffer;
@@ -94,7 +107,7 @@ public class PlayerController : MonoBehaviour
         {
             coyoteTime = _CoyoteTime;
             rb.gravityScale = RisingGScale;
-            if (_jumpDisableFrames <= 0) jumping = false;
+            if (_jumpDisableTime <= 0) jumping = false;
         }
         else coyoteTime -= dt;
 
@@ -102,7 +115,7 @@ public class PlayerController : MonoBehaviour
         if (rb.velocity.y <= 0 && !jumping) rb.gravityScale = FallingGScale; //falling gravity
 
         //if grounded and not jumping and delay ran out.
-        canJump = coyoteTime > 0 && _jumpDisableFrames <= 0 && !jumping; //update "jumpability"
+        canJump = coyoteTime > 0 && _jumpDisableTime <= 0 && !jumping; //update "jumpability"
 
         if (canJump && jumpBuffer > 0) //if able to jump & told to jump, then jump
         {
@@ -110,13 +123,13 @@ public class PlayerController : MonoBehaviour
         }
 
         //when at the peak of the jump change gravity
-        if (jumping && (!JumpAction.IsPressed() || rb.velocity.y < PeakVelAmount)) // TODO - Called too many times.
+        if (jumping && (!JumpAction.IsPressed() || rb.velocity.y < PeakVelAmount))
         {
             //cancel the jump when input is released
             rb.gravityScale = PeakGScale; //quickly slow the player down to reduce floaty-ness
         }
 
-        if (_jumpDisableFrames > 0) _jumpDisableFrames--;
+        if (_jumpDisableTime > 0) _jumpDisableTime -= dt;
     }
 
     void Jump()
@@ -128,7 +141,7 @@ public class PlayerController : MonoBehaviour
 
         jumping = true;
 
-        _jumpDisableFrames = JumpDisableFrames + 1;
+        _jumpDisableTime = JumpDisableTime;
     }
 
 #if DEBUG //if unity editor or debugging enabled
