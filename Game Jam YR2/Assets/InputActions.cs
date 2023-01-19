@@ -35,6 +35,15 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""Jump"",
+                    ""type"": ""Button"",
+                    ""id"": ""7c6f1a2c-ffdb-4557-b175-cac7e5da39c9"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -81,6 +90,28 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Move"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ddd6b7e-8560-4287-a6b4-c03b20421d6e"",
+                    ""path"": ""<Keyboard>/space"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""200d4c7a-4307-4b05-bc32-c9c976ae8427"",
+                    ""path"": ""<Gamepad>/buttonSouth"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Jump"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -90,6 +121,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         // Game
         m_Game = asset.FindActionMap("Game", throwIfNotFound: true);
         m_Game_Move = m_Game.FindAction("Move", throwIfNotFound: true);
+        m_Game_Jump = m_Game.FindAction("Jump", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -150,11 +182,13 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputActionMap m_Game;
     private IGameActions m_GameActionsCallbackInterface;
     private readonly InputAction m_Game_Move;
+    private readonly InputAction m_Game_Jump;
     public struct GameActions
     {
         private @InputActions m_Wrapper;
         public GameActions(@InputActions wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_Game_Move;
+        public InputAction @Jump => m_Wrapper.m_Game_Jump;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -167,6 +201,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Move.started -= m_Wrapper.m_GameActionsCallbackInterface.OnMove;
                 @Move.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnMove;
                 @Move.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnMove;
+                @Jump.started -= m_Wrapper.m_GameActionsCallbackInterface.OnJump;
+                @Jump.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnJump;
+                @Jump.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnJump;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -174,6 +211,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Move.started += instance.OnMove;
                 @Move.performed += instance.OnMove;
                 @Move.canceled += instance.OnMove;
+                @Jump.started += instance.OnJump;
+                @Jump.performed += instance.OnJump;
+                @Jump.canceled += instance.OnJump;
             }
         }
     }
@@ -181,5 +221,6 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     public interface IGameActions
     {
         void OnMove(InputAction.CallbackContext context);
+        void OnJump(InputAction.CallbackContext context);
     }
 }

@@ -1437,7 +1437,7 @@ GameObject:
   - component: {fileID: 1210363646}
   - component: {fileID: 1210363645}
   - component: {fileID: 1210363647}
-  m_Layer: 0
+  m_Layer: 3
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1562,3 +1562,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _Speed: 10
   _Acceleration: 100
+  JumpForce: 20
+  RisingGScale: 2
+  FallingGScale: 4
+  PeakGScale: 8
+  PeakVelAmount: 1
+  _CoyoteTime: 0.1
+  _JumpBuffer: 0.25
+  JumpDisableFrames: 3
+  GCRadius: 0.4
+  GCPosition: {x: 0, y: -0.65}
+  GCMask:
+    serializedVersion: 2
+    m_Bits: 1
