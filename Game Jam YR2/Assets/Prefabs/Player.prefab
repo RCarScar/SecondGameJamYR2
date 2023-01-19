@@ -96,7 +96,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 6071345341337692632}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 1e49c57daee970e419001833abff1a9f, type: 2}
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
@@ -117,7 +117,7 @@ Rigidbody2D:
   m_UseAutoMass: 0
   m_Mass: 1
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
+  m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
   m_Interpolate: 0
@@ -137,17 +137,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Speed: 10
-  _Acceleration: 100
-  JumpForce: 20
+  GroundAcceleration: 100
+  GroundDeceleration: 50
+  AirAcceleration: 50
+  AirDeceleration: 25
+  JumpForce: 15
   RisingGScale: 2
-  FallingGScale: 4
-  PeakGScale: 8
+  FallingGScale: 3
+  PeakGScale: 6
   PeakVelAmount: 1
   _CoyoteTime: 0.1
-  _JumpBuffer: 0.25
-  JumpDisableFrames: 3
+  _JumpBuffer: 0.1
+  JumpDisableTime: 0.1
   GCRadius: 0.4
   GCPosition: {x: 0, y: -0.65}
   GCMask:
     serializedVersion: 2
     m_Bits: 1
+  OnLand:
+    m_PersistentCalls:
+      m_Calls: []
+  MoveInput: 0
+  Grounded: 0
