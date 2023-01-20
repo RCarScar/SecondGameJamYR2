@@ -32,7 +32,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &9169699939457551827
 MonoBehaviour:
@@ -67,6 +67,22 @@ MonoBehaviour:
       m_Calls: []
     m_ActionId: 7c6f1a2c-ffdb-4557-b175-cac7e5da39c9
     m_ActionName: Game/Jump[/Keyboard/space]
+  - m_PersistentCalls:
+      m_Calls:
+      - m_Target: {fileID: 9169699939457551826}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: Blind
+        m_Mode: 0
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
+    m_ActionId: a94def64-f3d4-4c7e-923a-8647984073e0
+    m_ActionName: Game/Blind[/Keyboard/g]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: 
   m_DefaultActionMap: Game
@@ -84,6 +100,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5edb03d3578046543b3eb71b37be0f9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Blinder: {fileID: 0}
+  BlindSpeed: 10
+  Blinded: 0
+  postProcessing: {fileID: 0}
 --- !u!114 &8474790595704504720
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -96,6 +116,3 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e3a550c9ffa9a47a34f8bbe1215f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  SSPrefab: {fileID: 0}
-  Stuff: {fileID: 0}
-  button: 0
