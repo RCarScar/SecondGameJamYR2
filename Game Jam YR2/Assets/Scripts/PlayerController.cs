@@ -36,7 +36,7 @@ public class PlayerController : MonoBehaviour
     private Rigidbody2D rb;
 
     // -------------------- Events ----------------------- //
-    [HideInInspector] public UnityEvent OnLand = new UnityEvent();
+    [HideInInspector] public UnityEvent LandEvent = new UnityEvent();
 
     // -------------------- Input ------------------- //
     private float MoveInput;
@@ -77,15 +77,15 @@ public class PlayerController : MonoBehaviour
 
     void GatherInput() //gather required inputs
     {
-        MoveInput = GameManager.actions.Game.Move.ReadValue<float>();
-        JumpAction = GameManager.actions.Game.Jump;
+        MoveInput = GameManager.Actions.Game.Move.ReadValue<float>();
+        JumpAction = GameManager.Actions.Game.Jump;
     }
 
     void UpdateGrounded()
     {
         var lastGrounded = Grounded;
         Grounded = Physics2D.OverlapCircle(transform.position + (Vector3) GCPosition, GCRadius, GCMask);
-        if (Grounded && !lastGrounded) OnLand.Invoke(); //invoke event when the player lands on the ground
+        if (Grounded && !lastGrounded) LandEvent.Invoke(); //invoke event when the player lands on the ground
     }
 
     float CurrentAcceleration => Grounded ? GroundAcceleration : AirAcceleration;
