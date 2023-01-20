@@ -30545,7 +30545,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Speed: 10
-  _Acceleration: 5
+  GroundAcceleration: 100
+  GroundDeceleration: 50
+  AirAcceleration: 50
+  AirDeceleration: 25
   JumpForce: 10
   RisingGScale: 1
   FallingGScale: 2
@@ -30553,12 +30556,15 @@ MonoBehaviour:
   PeakVelAmount: 1
   _CoyoteTime: 0.1
   _JumpBuffer: 0.25
-  JumpDisableFrames: 3
+  JumpDisableTime: 0.1
   GCRadius: 0.5
   GCPosition: {x: 0, y: 0}
   GCMask:
     serializedVersion: 2
     m_Bits: 0
+  OnLand:
+    m_PersistentCalls:
+      m_Calls: []
 --- !u!50 &2101097971
 Rigidbody2D:
   serializedVersion: 4
@@ -30575,8 +30581,8 @@ Rigidbody2D:
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Material: {fileID: 6200000, guid: 1e49c57daee970e419001833abff1a9f, type: 2}
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -30660,25 +30666,25 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b7061e4e757a3a149909f8ecab8fa568, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  pc: {fileID: 0}
   player: {fileID: 1123308322118706634}
   speed: 1
   maxSpeed: 7
   acceleration: 100
-  jumpPower: 10
-  airAcceleration: 0.2
+  jumpPower: 5
+  airAcceleration: 15
+  peakGravity: 15
   playerDirection: 1
+  GCRadius: 0.6
+  GCPosition: {x: 0, y: 0}
+  GCMask:
+    serializedVersion: 2
+    m_Bits: 1
   db:
     velocityX: 0
     velocityY: 0
     playerDirection: 0
     left: 0
     right: 0
-  GCRadius: 0.47
-  GCPosition: {x: 0, y: 0}
-  GCMask:
-    serializedVersion: 2
-    m_Bits: 1
 --- !u!4 &2101097975
 Transform:
   m_ObjectHideFlags: 0
@@ -30798,7 +30804,7 @@ Rigidbody2D:
   m_AngularDrag: 0.05
   m_GravityScale: 1
   m_Material: {fileID: 0}
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
@@ -30831,7 +30837,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _Speed: 10
-  _Acceleration: 100
+  GroundAcceleration: 100
+  GroundDeceleration: 50
+  AirAcceleration: 50
+  AirDeceleration: 25
   JumpForce: 20
   RisingGScale: 2
   FallingGScale: 4
@@ -30839,9 +30848,12 @@ MonoBehaviour:
   PeakVelAmount: 1
   _CoyoteTime: 0.1
   _JumpBuffer: 0.25
-  JumpDisableFrames: 3
+  JumpDisableTime: 0.1
   GCRadius: 0.4
   GCPosition: {x: 0, y: -0.65}
   GCMask:
     serializedVersion: 2
     m_Bits: 1
+  OnLand:
+    m_PersistentCalls:
+      m_Calls: []
