@@ -1189,6 +1189,7 @@ GameObject:
   - component: {fileID: 197133034}
   - component: {fileID: 197133033}
   - component: {fileID: 197133035}
+  - component: {fileID: 197133036}
   m_Layer: 0
   m_Name: CM vcam1
   m_TagString: Untagged
@@ -1265,6 +1266,29 @@ MonoBehaviour:
   m_Offset: {x: 0, y: 2, z: 0}
   m_ApplyAfter: 1
   m_PreserveComposition: 0
+--- !u!114 &197133036
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 197133032}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 00b2d199b96b516448144ab30fb26aed, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ApplyAfter: 2
+  m_ChannelMask: 1
+  m_Gain: 1
+  m_Use2DDistance: 0
+  m_UseCameraSpace: 1
+  m_ReactionSettings:
+    m_SecondaryNoise: {fileID: 0}
+    m_AmplitudeGain: 1
+    m_FrequencyGain: 1
+    m_Duration: 1
+    m_NoiseOffsets: {x: 0, y: 0, z: 0}
 --- !u!1 &802241766
 GameObject:
   m_ObjectHideFlags: 0
@@ -1564,6 +1588,10 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1004373363075274790, guid: fb6788a8d8716204ebff1254d2a9677c, type: 3}
+      propertyPath: LandShake
+      value: 
+      objectReference: {fileID: 2655988077585873504, guid: 5e617f161306ee74ba8e2af947b746a1, type: 2}
     - target: {fileID: 6071345341337692632, guid: fb6788a8d8716204ebff1254d2a9677c, type: 3}
       propertyPath: m_Name
       value: Player
@@ -1612,6 +1640,34 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 6071345342274815780, guid: fb6788a8d8716204ebff1254d2a9677c, type: 3}
+      propertyPath: m_ImpulseDefinition.m_RawSignal
+      value: 
+      objectReference: {fileID: 11400000, guid: 39415be6c57cf634f9893db9bd63d950, type: 2}
+    - target: {fileID: 6071345342274815780, guid: fb6788a8d8716204ebff1254d2a9677c, type: 3}
+      propertyPath: m_ImpulseDefinition.m_ImpulseType
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 6071345342274815780, guid: fb6788a8d8716204ebff1254d2a9677c, type: 3}
+      propertyPath: m_ImpulseDefinition.m_ImpulseShape
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6071345342274815780, guid: fb6788a8d8716204ebff1254d2a9677c, type: 3}
+      propertyPath: m_ImpulseDefinition.m_AmplitudeGain
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6071345342274815780, guid: fb6788a8d8716204ebff1254d2a9677c, type: 3}
+      propertyPath: m_ImpulseDefinition.m_FrequencyGain
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6071345342274815780, guid: fb6788a8d8716204ebff1254d2a9677c, type: 3}
+      propertyPath: m_ImpulseDefinition.m_TimeEnvelope.m_SustainTime
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 6071345342274815780, guid: fb6788a8d8716204ebff1254d2a9677c, type: 3}
+      propertyPath: m_ImpulseDefinition.m_TimeEnvelope.m_ScaleWithImpact
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: fb6788a8d8716204ebff1254d2a9677c, type: 3}
@@ -1623,6 +1679,14 @@ PrefabInstance:
     serializedVersion: 2
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 8474790595704504720, guid: fa9f3b2f9d6d18e428d7b3c590650a03, type: 3}
+      propertyPath: Stuff
+      value: 
+      objectReference: {fileID: 2655988077585873504, guid: 08a979843b1b23946a8256eef524c719, type: 2}
+    - target: {fileID: 8474790595704504720, guid: fa9f3b2f9d6d18e428d7b3c590650a03, type: 3}
+      propertyPath: sscomp
+      value: 
+      objectReference: {fileID: 1806068055276216548, guid: a6aac5918d9d84845b4e1c28c595d02e, type: 3}
     - target: {fileID: 9169699939457551824, guid: fa9f3b2f9d6d18e428d7b3c590650a03, type: 3}
       propertyPath: m_RootOrder
       value: 3
@@ -1671,10 +1735,22 @@ PrefabInstance:
       propertyPath: m_Name
       value: Game Manager
       objectReference: {fileID: 0}
+    - target: {fileID: 9169699939457551826, guid: fa9f3b2f9d6d18e428d7b3c590650a03, type: 3}
+      propertyPath: a
+      value: 
+      objectReference: {fileID: 2655988077585873504, guid: 08a979843b1b23946a8256eef524c719, type: 2}
     - target: {fileID: 9169699939457551827, guid: fa9f3b2f9d6d18e428d7b3c590650a03, type: 3}
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 802241768}
+    - target: {fileID: 9169699939457551827, guid: fa9f3b2f9d6d18e428d7b3c590650a03, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionId
+      value: 7c6f1a2c-ffdb-4557-b175-cac7e5da39c9
+      objectReference: {fileID: 0}
+    - target: {fileID: 9169699939457551827, guid: fa9f3b2f9d6d18e428d7b3c590650a03, type: 3}
+      propertyPath: m_ActionEvents.Array.data[1].m_ActionName
+      value: Game/Jump[/Keyboard/space]
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_AddedGameObjects: []
   m_SourcePrefab: {fileID: 100100000, guid: fa9f3b2f9d6d18e428d7b3c590650a03, type: 3}

@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 6071345341337692633}
   - component: {fileID: 6071345341337692636}
   - component: {fileID: 6071345341337692639}
+  - component: {fileID: 1004373363075274790}
   - component: {fileID: 6071345341337692637}
   m_Layer: 3
   m_Name: Player
@@ -124,6 +125,19 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
+--- !u!114 &1004373363075274790
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6071345341337692632}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c1768fe53caab28488a817cc111750c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  LandShake: {fileID: 2655988077585873504, guid: 5e617f161306ee74ba8e2af947b746a1, type: 2}
 --- !u!114 &6071345341337692637
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -154,8 +168,6 @@ MonoBehaviour:
   GCMask:
     serializedVersion: 2
     m_Bits: 1
-  OnLand:
+  LandEvent:
     m_PersistentCalls:
       m_Calls: []
-  MoveInput: 0
-  Grounded: 0
