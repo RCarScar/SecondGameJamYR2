@@ -1,3 +1,4 @@
+/*Made by Ryan C.*/
 using UnityEngine;
 
 [System.Serializable]
@@ -103,11 +104,14 @@ public class EnemyController : MonoBehaviour
 
     private bool Grounded => Physics2D.OverlapCircle((Vector2)transform.position + Vector2.down, GCRadius, GCMask);
 
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.green;
-    //    Gizmos.DrawSphere((Vector2)transform.position + Vector2.left/2, GCRadius);
-    //    Gizmos.DrawSphere((Vector2)transform.position + Vector2.down, GCRadius);
-    //    Gizmos.DrawSphere((Vector2)transform.position + Vector2.right/2, GCRadius);
-    //}
+    private bool GroundAhead => Physics2D.Raycast((Vector2)transform.position + (playerDirection * Vector2.right), Vector2.down * Mathf.Infinity);
+
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.green;
+        Gizmos.DrawSphere((Vector2)transform.position + Vector2.left / 2, GCRadius);
+        Gizmos.DrawSphere((Vector2)transform.position + Vector2.down, GCRadius);
+        Gizmos.DrawSphere((Vector2)transform.position + Vector2.right / 2, GCRadius);
+        Gizmos.DrawRay(transform.position + (playerDirection * Vector3.right), Vector2.down * Mathf.Infinity);
+    }
 }
