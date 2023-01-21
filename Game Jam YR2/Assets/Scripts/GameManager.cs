@@ -13,15 +13,15 @@ public class GameManager : MonoBehaviour
     public static InputActions Actions;
     public static ScreenShakeManager ScreenShake;
 
-    public Image Blinder;
-    public float BlindSpeed = 5;
+    public SpriteRenderer GrowthBlinder;
+    public SpriteRenderer FadeBlinder;
+    public Vector3 BlindedScale = Vector3.zero;
+    public float BlindSpeed = 10;
+
     public bool Blinded = false;
 
-    [HideInInspector] public Volume postProcessing;
-    private Vignette vignette;
-
-
     // --------------- Blinder Data ---------------- //
+    private Vector3 initBlindScale = Vector3.one;
 
     private void Reset()
     {
@@ -35,19 +35,20 @@ public class GameManager : MonoBehaviour
         pInput = GetComponent<PlayerInput>();
         Actions = new InputActions();
         Actions.Enable();
-        postProcessing = Camera.main.GetComponent<Volume>();
-        postProcessing.profile.TryGet(out vignette);
+
+        initBlindScale = GrowthBlinder.transform.localScale;
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(Blinder)
-        {
-            // Change the alpha value of the blinder
-            Blinder.color = new Color(Blinder.color.r, Blinder.color.g, Blinder.color.b,
-                Mathf.MoveTowards(Blinder.color.a, Blinded ? 1 : 0, Time.deltaTime * BlindSpeed));
-        }
+        // Change the scale of the growth blinder
+        GrowthBlinder.transform.localScale = Vector3.MoveTowards(GrowthBlinder.transform.localScale,
+                Blinded ? BlindedScale : initBlindScale, Time.deltaTime * BlindSpeed);
+
+        // Change the alpha value of the fade blinder
+        FadeBlinder.color = new Color(FadeBlinder.color.r, FadeBlinder.color.g, FadeBlinder.color.b,
+            Mathf.MoveTowards(FadeBlinder.color.a, Blinded ? 1 : 0, Time.deltaTime * BlindSpeed));
     }
 
     public void Blind(InputAction.CallbackContext context)
