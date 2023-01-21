@@ -1,3 +1,4 @@
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -7,6 +8,12 @@ public class ScreenUI : MonoBehaviour
     [SerializeField] private string mainGameScene = "";
 
     [SerializeField] private GameObject instructions;
+
+    private void Start()
+    {
+
+    }
+
     public void Play()
     {
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
