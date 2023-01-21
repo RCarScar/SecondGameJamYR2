@@ -1,3 +1,5 @@
+/* Made by Blake Rubadue */
+
 using Cinemachine;
 using UnityEditor.Presets;
 using UnityEngine;

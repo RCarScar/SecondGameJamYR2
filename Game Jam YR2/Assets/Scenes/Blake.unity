@@ -13910,7 +13910,7 @@ Transform:
   m_LocalScale: {x: 21.617, y: 21.617, z: 4.3234}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 802241769}
+  m_Father: {fileID: 1691167865}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &802241766
@@ -13997,8 +13997,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1188077808}
-  - {fileID: 307718987}
+  - {fileID: 1691167865}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -14239,14 +14238,14 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1188077807}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 241281672}
   - {fileID: 987410441}
-  m_Father: {fileID: 802241769}
+  m_Father: {fileID: 1691167865}
   m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &1210363644 stripped
@@ -14425,6 +14424,74 @@ SpriteMask:
   m_BackSortingOrder: 0
   m_IsCustomRangeActive: 0
   m_SpriteSortPoint: 0
+--- !u!1 &1691167864
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1691167865}
+  - component: {fileID: 1691167866}
+  - component: {fileID: 1691167867}
+  m_Layer: 0
+  m_Name: Blinder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1691167865
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691167864}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1188077808}
+  - {fileID: 307718987}
+  m_Father: {fileID: 802241769}
+  m_RootOrder: -1
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!111 &1691167866
+Animation:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691167864}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Animation: {fileID: 0}
+  m_Animations:
+  - {fileID: 7400000, guid: 3ed9b34ce2f2dd14e8edabde527c91d8, type: 2}
+  - {fileID: 7400000, guid: b3821330a87ae6540b03ff498454560a, type: 2}
+  - {fileID: 7400000, guid: e363a3a10715fac4aa2105758c917593, type: 2}
+  m_WrapMode: 0
+  m_PlayAutomatically: 0
+  m_AnimatePhysics: 0
+  m_CullingType: 0
+--- !u!114 &1691167867
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1691167864}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16b6936226fd7d6448f2af1c244e49c3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  CloseEyeClip: {fileID: 7400000, guid: b3821330a87ae6540b03ff498454560a, type: 2}
+  OpenEyeClip: {fileID: 7400000, guid: e363a3a10715fac4aa2105758c917593, type: 2}
+  BlinkClip: {fileID: 7400000, guid: 3ed9b34ce2f2dd14e8edabde527c91d8, type: 2}
 --- !u!1 &1898595725
 GameObject:
   m_ObjectHideFlags: 0
@@ -14620,7 +14687,7 @@ PrefabInstance:
     - target: {fileID: 9169699939457551826, guid: fa9f3b2f9d6d18e428d7b3c590650a03, type: 3}
       propertyPath: Blinder
       value: 
-      objectReference: {fileID: 987410442}
+      objectReference: {fileID: 1691167867}
     - target: {fileID: 9169699939457551826, guid: fa9f3b2f9d6d18e428d7b3c590650a03, type: 3}
       propertyPath: Blinder2
       value: 
