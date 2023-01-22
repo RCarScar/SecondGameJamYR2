@@ -66,7 +66,7 @@ Preset:
     objectReference: {fileID: 11400000, guid: 4fe89ceb3ac551b4f9eb71bf03926ed5, type: 2}
   - target: {fileID: 0}
     propertyPath: m_ImpulseDefinition.m_AmplitudeGain
-    value: 1
+    value: 0.35
     objectReference: {fileID: 0}
   - target: {fileID: 0}
     propertyPath: m_ImpulseDefinition.m_FrequencyGain
