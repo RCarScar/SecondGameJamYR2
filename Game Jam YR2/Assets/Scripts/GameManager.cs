@@ -1,17 +1,27 @@
+/* Made by Blake Rubadue */
+
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.InputSystem;
-using UnityEngine.Rendering;
-using UnityEngine.Rendering.Universal;
-using UnityEngine.UI;
 
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(ScreenShakeManager))]
 public class GameManager : MonoBehaviour
 {
+    // ----------- Static Variables ------------ //
     public static GameManager Instance;
     public static PlayerInput pInput;
     public static InputActions Actions;
     public static ScreenShakeManager ScreenShake;
+
+    // ----------- Events ----------- //
+    public static UnityEvent PlayerDeathEvent = new UnityEvent();
+
+    public static UnityEvent OpenEyesEvent = new UnityEvent();
+    public static UnityEvent CloseEyesEvent = new UnityEvent();
+    public static UnityEvent BlinkEvent = new UnityEvent();
+
+    public Blinder Blinder;
 
     public SpriteRenderer GrowthBlinder;
     public SpriteRenderer FadeBlinder;
@@ -42,27 +52,43 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        // Change the scale of the growth blinder
+
+        /*// Change the scale of the growth blinder
         GrowthBlinder.transform.localScale = Vector3.MoveTowards(GrowthBlinder.transform.localScale,
                 Blinded ? BlindedScale : initBlindScale, Time.deltaTime * BlindSpeed);
 
         // Change the alpha value of the fade blinder
         FadeBlinder.color = new Color(FadeBlinder.color.r, FadeBlinder.color.g, FadeBlinder.color.b,
-            Mathf.MoveTowards(FadeBlinder.color.a, Blinded ? 1 : 0, Time.deltaTime * BlindSpeed));
+            Mathf.MoveTowards(FadeBlinder.color.a, Blinded ? 1 : 0, Time.deltaTime * BlindSpeed));*/
     }
 
     public void Blind(InputAction.CallbackContext context)
     {
         if(context.started && !Blinded)
         {
-            Debug.Log("Blind");
+            Blinder.CloseEyes();
             Blinded = true;
         }
         else if(context.started && Blinded)
         {
-            Debug.Log("De-Blind");
+            Blinder.OpenEyes();
             Blinded = false;
         }
-        
+    }
+
+    public void Blink(float Speed)
+    {
+        // Change the scale of the growth blinder
+        GrowthBlinder.transform.localScale = Vector3.MoveTowards(GrowthBlinder.transform.localScale,
+                Blinded ? BlindedScale : initBlindScale, Time.deltaTime * Speed);
+
+        // Change the alpha value of the fade blinder
+        FadeBlinder.color = new Color(FadeBlinder.color.r, FadeBlinder.color.g, FadeBlinder.color.b,
+            Mathf.MoveTowards(FadeBlinder.color.a, Blinded ? 1 : 0, Time.deltaTime * Speed));
+    }
+
+    public void PlayerDeath()
+    {
+
     }
 }
