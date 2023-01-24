@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class ScreenUI : MonoBehaviour
 {
-    [SerializeField] private string mainGameScene = "";
-
     [SerializeField] private GameObject instructions;
 
     private void Start()

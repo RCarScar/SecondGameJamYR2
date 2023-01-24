@@ -527,7 +527,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae0fdb2616af0c24ea99fc70cf21e884, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mainGameScene: FinalScene
+  mainGameScene: Blake
   instructions: {fileID: 1910021650}
 --- !u!1 &968011915
 GameObject:
