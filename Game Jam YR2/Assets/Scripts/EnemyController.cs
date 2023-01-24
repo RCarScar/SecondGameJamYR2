@@ -55,10 +55,10 @@ public class EnemyController : MonoBehaviour
         #endregion
 
         //The player direction is -1 if left, 1 if right.
-        playerDirection = Mathf.RoundToInt(Mathf.Sign(transform.position.x - player.transform.position.x));
+        playerDirection = (int)Mathf.Sign(player.transform.position.x - transform.position.x);
 
         //Target Player
-        playerDist = DistanceFrom(transform.position, player.transform.position);
+        playerDist = Mathf.Abs(transform.position.x - player.transform.position.x);
         if(playerDist < targetDistance)
         {
             //Move towards Player
@@ -96,17 +96,12 @@ public class EnemyController : MonoBehaviour
         }
     }
 
-    private float DistanceFrom(Vector2 v1, Vector2 v2)
-    {
-        return Mathf.Sqrt(Mathf.Pow((v1.x - v2.x),2) - Mathf.Pow((v1.y - v2.y), 2));
-    }
-
     private void Navigate()
     {
         //Left & Right Wall Collision Detection and Velocity Set
         rb.velocity = Physics2D.OverlapCircle((Vector2)transform.position + Vector2.right / 2, GCRadius, GCMask)
             || Physics2D.OverlapCircle((Vector2)transform.position + Vector2.left / 2, GCRadius, GCMask)
-            ? rb.velocity + new Vector2(playerDirection, jumpPower)
+            ? new Vector2(rb.velocity.x, rb.velocity.y + jumpPower)
             : rb.velocity;
     }
 
@@ -114,7 +109,7 @@ public class EnemyController : MonoBehaviour
     {
         //From the current velocity, increase by Acceleration every Fixed Frame until you hit the Max Speed
         //If on the right side, go to maxSpeed. If on the left side, go to -maxSpeed.
-        rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, Mathf.Sign(playerDirection) * -maxSpeed, Time.fixedDeltaTime * acceleration), rb.velocity.y);
+        rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, playerDirection * maxSpeed, Time.fixedDeltaTime * acceleration), rb.velocity.y);
     }
 
     private bool Grounded => Physics2D.OverlapCircle((Vector2)transform.position + Vector2.down, GCRadius, GCMask);
