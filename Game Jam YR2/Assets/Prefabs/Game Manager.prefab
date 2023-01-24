@@ -136,10 +136,10 @@ MonoBehaviour:
     clips:
     - {fileID: 8300000, guid: c2d4607727fa24f47945aa27a9ad2b18, type: 3}
     volume:
-      Min: 0
-      Max: 0
+      Min: 1
+      Max: 1
     pitch:
-      Min: 0
-      Max: 0
+      Min: 1
+      Max: 1
     Loop: 0
     Parent: {fileID: 0}
