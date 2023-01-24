@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 9169699939457551827}
   - component: {fileID: 9169699939457551826}
   - component: {fileID: 8474790595704504720}
+  - component: {fileID: 647536868}
   m_Layer: 0
   m_Name: Game Manager
   m_TagString: Untagged
@@ -100,6 +101,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5edb03d3578046543b3eb71b37be0f9e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Blinder: {fileID: 0}
   GrowthBlinder: {fileID: 0}
   FadeBlinder: {fileID: 0}
   BlindedScale: {x: 0, y: 0, z: 0}
@@ -117,3 +119,27 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 44e3a550c9ffa9a47a34f8bbe1215f17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &647536868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9169699939457551825}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4248e10e414b0494b8a1b7cc11da518a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  sounds:
+  - name: Test
+    clips:
+    - {fileID: 8300000, guid: c2d4607727fa24f47945aa27a9ad2b18, type: 3}
+    volume:
+      Min: 0
+      Max: 0
+    pitch:
+      Min: 0
+      Max: 0
+    Loop: 0
+    Parent: {fileID: 0}

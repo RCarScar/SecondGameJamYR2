@@ -1,11 +1,14 @@
 /* Made by Blake Rubadue */
 
+using Sounds;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(PlayerInput))]
 [RequireComponent(typeof(ScreenShakeManager))]
+[RequireComponent(typeof(SoundPlayer))]
 public class GameManager : MonoBehaviour
 {
     // ----------- Static Variables ------------ //
@@ -13,12 +16,15 @@ public class GameManager : MonoBehaviour
     public static PlayerInput pInput;
     public static InputActions Actions;
     public static ScreenShakeManager ScreenShake;
+    public static SoundPlayer AudioPlayer;
 
     // ----------- Events ----------- //
     public static UnityEvent PlayerDeathEvent = new UnityEvent();
 
-    public static UnityEvent OpenEyesEvent = new UnityEvent();
-    public static UnityEvent CloseEyesEvent = new UnityEvent();
+    public static UnityEvent OpenEyesStartEvent = new UnityEvent();
+    public static UnityEvent CloseEyesStartEvent = new UnityEvent();
+    public static UnityEvent OpenEyesVisualEvent = new UnityEvent();
+    public static UnityEvent CloseEyesVisualEvent = new UnityEvent();
     public static UnityEvent BlinkEvent = new UnityEvent();
 
     public Blinder Blinder;
@@ -36,7 +42,7 @@ public class GameManager : MonoBehaviour
     private void Reset()
     {
         Instance = this; //setup static GM instance
-        ScreenShake = GetComponent<ScreenShakeManager>();
+
     }
 
     void Awake()
@@ -45,6 +51,9 @@ public class GameManager : MonoBehaviour
         pInput = GetComponent<PlayerInput>();
         Actions = new InputActions();
         Actions.Enable();
+
+        ScreenShake = GetComponent<ScreenShakeManager>();
+        AudioPlayer = GetComponent<SoundPlayer>();
 
         initBlindScale = GrowthBlinder.transform.localScale;
     }

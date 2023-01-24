@@ -10,6 +10,8 @@ public class Blinder : MonoBehaviour
     [SerializeField] AnimationClip OpenEyeClip;
     [SerializeField] AnimationClip BlinkClip;
 
+    public UnityEvent TestEvent = new UnityEvent();
+
     Animation anim;
 
     private void Start()
@@ -18,6 +20,7 @@ public class Blinder : MonoBehaviour
         anim.AddClip(OpenEyeClip, "Open");
         anim.AddClip(CloseEyeClip, "Close");
         anim.AddClip(BlinkClip, "Blink");
+        TestEvent.AddListener(Test);
     }
 
     public void OpenEyes()
@@ -35,15 +38,37 @@ public class Blinder : MonoBehaviour
         anim.Play("Blink");
     }
 
+    public void CallMethod(string methodName)
+    {
+        Invoke(methodName, 0);
+    }
+    
+    public void Test()
+    {
+        Debug.Log("Test");
+    }
+
+    public void InvokeStartOpenEyes()
+    {
+        GameManager.OpenEyesStartEvent.Invoke();
+        Debug.Log("Start Open");
+    }
+
+    public void InvokeStartCloseEyes()
+    {
+        GameManager.CloseEyesStartEvent.Invoke();
+        Debug.Log("Start Close");
+    }
+
     public void InvokeOpenEyes()
     {
-        GameManager.OpenEyesEvent.Invoke();
+        GameManager.OpenEyesVisualEvent.Invoke();
         Debug.Log("Open");
     }
 
     public void InvokeCloseEyes()
     {
-        GameManager.CloseEyesEvent.Invoke();
+        GameManager.CloseEyesVisualEvent.Invoke();
         Debug.Log("Close");
     }
 
