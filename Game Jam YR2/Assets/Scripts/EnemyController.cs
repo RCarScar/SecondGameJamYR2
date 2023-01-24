@@ -24,6 +24,7 @@ public class EnemyController : MonoBehaviour
     public LayerMask GCMask;
 
     //Variables Not Really Accessed in Editor
+    private Rigidbody2D playerRB;
     private float timeKeeper, pastVelocity, playerDist;
     private bool jumpPeaked = false;
     private Rigidbody2D rb;
@@ -35,6 +36,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        playerRB = player.GetComponent<Rigidbody2D>();
         groundAcceleration = acceleration;
         rb = GetComponent<Rigidbody2D>();
     }
@@ -54,8 +56,6 @@ public class EnemyController : MonoBehaviour
 
         //The player direction is -1 if left, 1 if right.
         playerDirection = Mathf.RoundToInt(Mathf.Sign(transform.position.x - player.transform.position.x));
-        acceleration *= playerDirection;
-        airAcceleration *= playerDirection;
 
         //Target Player
         playerDist = DistanceFrom(transform.position, player.transform.position);
