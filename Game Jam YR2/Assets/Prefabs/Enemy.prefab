@@ -13,7 +13,6 @@ GameObject:
   - component: {fileID: 366101302481056229}
   - component: {fileID: 366101302481056228}
   - component: {fileID: 366101302481056227}
-  - component: {fileID: 366101302481056226}
   m_Layer: 6
   m_Name: Enemy
   m_TagString: Untagged
@@ -55,6 +54,7 @@ MonoBehaviour:
   jumpPower: 5
   airAcceleration: 15
   peakGravity: 15
+  targetDistance: 5
   playerDirection: 1
   GCRadius: 0.6
   GCPosition: {x: 0, y: 0}
@@ -157,36 +157,3 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &366101302481056226
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 366101302481056225}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d4ddebc383bbd541bab5fe43a247006, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _Speed: 10
-  GroundAcceleration: 100
-  GroundDeceleration: 50
-  AirAcceleration: 50
-  AirDeceleration: 25
-  JumpForce: 10
-  RisingGScale: 1
-  FallingGScale: 2
-  PeakGScale: 4
-  PeakVelAmount: 1
-  _CoyoteTime: 0.1
-  _JumpBuffer: 0.25
-  JumpDisableTime: 0.1
-  GCRadius: 0.5
-  GCPosition: {x: 0, y: 0}
-  GCMask:
-    serializedVersion: 2
-    m_Bits: 0
-  LandEvent:
-    m_PersistentCalls:
-      m_Calls: []

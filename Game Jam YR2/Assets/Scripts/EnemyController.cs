@@ -1,4 +1,5 @@
 /*Made by Ryan C.*/
+using Unity.VisualScripting.Dependencies.NCalc;
 using UnityEngine;
 
 [System.Serializable]
@@ -13,6 +14,7 @@ public class EnemyController : MonoBehaviour
 {
     #region Variables
     //Editor Assigned Variables
+    [SerializeField] private GameManager gm;
     [SerializeField] private GameObject player;
     [SerializeField] private float speed = 1, maxSpeed = 1, acceleration = 1, jumpPower, airAcceleration = 0.2f, peakGravity, targetDistance = 5; 
     [SerializeField] private int playerDirection = 1;
@@ -25,7 +27,7 @@ public class EnemyController : MonoBehaviour
 
     //Variables Not Really Accessed in Editor
     private Rigidbody2D playerRB;
-    private float timeKeeper, pastVelocity, playerDist;
+    private float timeKeeper, pastVelocity, playerDist, originalTargetDistance;
     private bool jumpPeaked = false;
     private Rigidbody2D rb;
     private float groundAcceleration = 1;
@@ -36,9 +38,11 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        originalTargetDistance = targetDistance;
         playerRB = player.GetComponent<Rigidbody2D>();
         groundAcceleration = acceleration;
         rb = GetComponent<Rigidbody2D>();
+        GameManager.CloseEyesVisualEvent.AddListener(EyesClosed);
     }
 
     void FixedUpdate()
@@ -75,6 +79,13 @@ public class EnemyController : MonoBehaviour
         acceleration = Grounded ? groundAcceleration : airAcceleration;
     }
 
+    private void EyesClosed()
+    {
+        rb.velocity = gm.Blinded == true ? Vector3.zero : rb.velocity;
+
+        targetDistance = gm.Blinded == true ? 0 : originalTargetDistance;
+    }
+    
     private void GravityChange()
     {
         if(Grounded == true)
