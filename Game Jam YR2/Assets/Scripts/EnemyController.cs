@@ -12,19 +12,23 @@ public class Debugging
 public class EnemyController : MonoBehaviour
 {
     #region Variables
+    //Editor Assigned Variables
     [SerializeField] private GameObject player;
-    [SerializeField] private float speed = 1, maxSpeed = 1, acceleration = 1, jumpPower, airAcceleration = 0.2f, peakGravity; 
+    [SerializeField] private float speed = 1, maxSpeed = 1, acceleration = 1, jumpPower, airAcceleration = 0.2f, peakGravity, targetDistance = 5; 
     [SerializeField] private int playerDirection = 1;
 
-    private float timeKeeper, pastVelocity;
-    private bool jumpPeaked = false;
-    private Rigidbody2D rb;
-    private float groundAcceleration = 1;
-
+    //Ground Check Stuff
     [Header("Ground Check")]
     [Min(0)] public float GCRadius = 0.5f;
     public Vector2 GCPosition;
     public LayerMask GCMask;
+
+    //Variables Not Really Accessed in Editor
+    private Rigidbody2D playerRB;
+    private float timeKeeper, pastVelocity, playerDist;
+    private bool jumpPeaked = false;
+    private Rigidbody2D rb;
+    private float groundAcceleration = 1;
 
     [Header("Debugging Strictly")]
     public Debugging db = new Debugging();
@@ -32,6 +36,7 @@ public class EnemyController : MonoBehaviour
 
     void Start()
     {
+        playerRB = player.GetComponent<Rigidbody2D>();
         groundAcceleration = acceleration;
         rb = GetComponent<Rigidbody2D>();
     }
@@ -48,21 +53,26 @@ public class EnemyController : MonoBehaviour
         db.left = (Physics2D.OverlapCircle((Vector2)transform.position + Vector2.left / 2, GCRadius, GCMask)) ? true : false;
         db.peakGravity = jumpPeaked;
         #endregion
-        
+
+        //The player direction is -1 if left, 1 if right.
+        playerDirection = Mathf.RoundToInt(Mathf.Sign(transform.position.x - player.transform.position.x));
+
+        //Target Player
+        playerDist = DistanceFrom(transform.position, player.transform.position);
+        if(playerDist < targetDistance)
+        {
+            //Move towards Player
+            PushPlayer(playerDirection);
+
+            //Jump if stuck on a block.
+            Navigate();
+        }
+
         //If at the peak of jump, make gravity faster.
         GravityChange();
 
         //If in the air, set the acceleration to the air acceleration.
         acceleration = Grounded ? groundAcceleration : airAcceleration;
-
-        //The player direction is -1 if left, 1 if right.
-        playerDirection = Mathf.RoundToInt(Mathf.Sign(player.transform.position.x - transform.position.x));
-
-        //Move towards Player
-        EnemyMove(playerDirection);
-
-        //Jump if stuck on a block.
-        Navigate();
     }
 
     private void GravityChange()
@@ -86,6 +96,11 @@ public class EnemyController : MonoBehaviour
         }
     }
 
+    private float DistanceFrom(Vector2 v1, Vector2 v2)
+    {
+        return Mathf.Sqrt(Mathf.Pow((v1.x - v2.x),2) - Mathf.Pow((v1.y - v2.y), 2));
+    }
+
     private void Navigate()
     {
         //Left & Right Wall Collision Detection and Velocity Set
@@ -95,11 +110,11 @@ public class EnemyController : MonoBehaviour
             : rb.velocity;
     }
 
-    private void EnemyMove(int playerDirection = 1)
+    private void PushPlayer(int playerDirection = 1)
     {
         //From the current velocity, increase by Acceleration every Fixed Frame until you hit the Max Speed
         //If on the right side, go to maxSpeed. If on the left side, go to -maxSpeed.
-        rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, Mathf.Sign(playerDirection) * maxSpeed, Time.fixedDeltaTime * acceleration), rb.velocity.y);
+        rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, Mathf.Sign(playerDirection) * -maxSpeed, Time.fixedDeltaTime * acceleration), rb.velocity.y);
     }
 
     private bool Grounded => Physics2D.OverlapCircle((Vector2)transform.position + Vector2.down, GCRadius, GCMask);
