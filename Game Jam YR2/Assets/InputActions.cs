@@ -53,6 +53,15 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Fall"",
+                    ""type"": ""Button"",
+                    ""id"": ""0beff5d2-2fe1-483a-b9a7-0b46066d59f1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -143,6 +152,28 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                     ""action"": ""Blind"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f3e04bd7-ea5b-498f-b9d0-aa2b70a5e4df"",
+                    ""path"": ""<Keyboard>/s"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Fall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3f3ed21f-7b43-4cc9-aa1d-75be75958351"",
+                    ""path"": ""<Gamepad>/leftStick/down"",
+                    ""interactions"": """",
+                    ""processors"": ""AxisDeadzone(min=0.25)"",
+                    ""groups"": """",
+                    ""action"": ""Fall"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -182,6 +213,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         m_Game_Move = m_Game.FindAction("Move", throwIfNotFound: true);
         m_Game_Jump = m_Game.FindAction("Jump", throwIfNotFound: true);
         m_Game_Blind = m_Game.FindAction("Blind", throwIfNotFound: true);
+        m_Game_Fall = m_Game.FindAction("Fall", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -244,6 +276,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
     private readonly InputAction m_Game_Move;
     private readonly InputAction m_Game_Jump;
     private readonly InputAction m_Game_Blind;
+    private readonly InputAction m_Game_Fall;
     public struct GameActions
     {
         private @InputActions m_Wrapper;
@@ -251,6 +284,7 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Game_Move;
         public InputAction @Jump => m_Wrapper.m_Game_Jump;
         public InputAction @Blind => m_Wrapper.m_Game_Blind;
+        public InputAction @Fall => m_Wrapper.m_Game_Fall;
         public InputActionMap Get() { return m_Wrapper.m_Game; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -269,6 +303,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Blind.started -= m_Wrapper.m_GameActionsCallbackInterface.OnBlind;
                 @Blind.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnBlind;
                 @Blind.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnBlind;
+                @Fall.started -= m_Wrapper.m_GameActionsCallbackInterface.OnFall;
+                @Fall.performed -= m_Wrapper.m_GameActionsCallbackInterface.OnFall;
+                @Fall.canceled -= m_Wrapper.m_GameActionsCallbackInterface.OnFall;
             }
             m_Wrapper.m_GameActionsCallbackInterface = instance;
             if (instance != null)
@@ -282,6 +319,9 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
                 @Blind.started += instance.OnBlind;
                 @Blind.performed += instance.OnBlind;
                 @Blind.canceled += instance.OnBlind;
+                @Fall.started += instance.OnFall;
+                @Fall.performed += instance.OnFall;
+                @Fall.canceled += instance.OnFall;
             }
         }
     }
@@ -309,5 +349,6 @@ public partial class @InputActions : IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnBlind(InputAction.CallbackContext context);
+        void OnFall(InputAction.CallbackContext context);
     }
 }
