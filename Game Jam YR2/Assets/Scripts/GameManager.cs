@@ -19,13 +19,13 @@ public class GameManager : MonoBehaviour
     public static SoundPlayer AudioPlayer;
 
     // ----------- Events ----------- //
-    public static UnityEvent PlayerDeathEvent = new UnityEvent();
+    [Tooltip("Invokes when the player takes damage")] public static UnityEvent PlayerDeathEvent = new UnityEvent();
 
-    public static UnityEvent OpenEyesStartEvent = new UnityEvent();
-    public static UnityEvent CloseEyesStartEvent = new UnityEvent();
-    public static UnityEvent OpenEyesVisualEvent = new UnityEvent();
-    public static UnityEvent CloseEyesVisualEvent = new UnityEvent();
-    public static UnityEvent BlinkEvent = new UnityEvent();
+    [Tooltip("Invoked when Open Eyes animation starts")] public static UnityEvent OpenEyesStartEvent = new UnityEvent();
+    [Tooltip("Invoked when Close Eyes animation starts")] public static UnityEvent CloseEyesStartEvent = new UnityEvent();
+    [Tooltip("Invoked when the player can see properly")] public static UnityEvent OpenEyesVisualEvent = new UnityEvent();
+    [Tooltip("Invoked when the player is sufficiently blinded")] public static UnityEvent CloseEyesVisualEvent = new UnityEvent();
+    [Tooltip("Invoked when player starts respawning")] public static UnityEvent PlayerRespawnEvent = new UnityEvent();
 
     public Blinder Blinder;
 
@@ -34,19 +34,27 @@ public class GameManager : MonoBehaviour
     public Vector3 BlindedScale = Vector3.zero;
     public float BlindSpeed = 10;
 
+    public List<Checkpoint> Checkpoints;
+    public static Checkpoint CurrentCheckpoint { get; private set; }
+    public static int CurrentCheckPointIndex { get; private set; }
+
+
+    // ----------------- Game State ----------------- //
     public bool Blinded = false;
+    public bool Respawning = false;
 
     // --------------- Blinder Data ---------------- //
     private Vector3 initBlindScale = Vector3.one;
 
     private void Reset()
     {
-        Instance = this; //setup static GM instance
-
+        if (Checkpoints == null) Checkpoints = new List<Checkpoint>();
     }
 
     void Awake()
     {
+        Instance = this; //setup static GM instance
+
         // - setup input - //
         pInput = GetComponent<PlayerInput>();
         Actions = new InputActions();
@@ -56,19 +64,6 @@ public class GameManager : MonoBehaviour
         AudioPlayer = GetComponent<SoundPlayer>();
 
         initBlindScale = GrowthBlinder.transform.localScale;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-        /*// Change the scale of the growth blinder
-        GrowthBlinder.transform.localScale = Vector3.MoveTowards(GrowthBlinder.transform.localScale,
-                Blinded ? BlindedScale : initBlindScale, Time.deltaTime * BlindSpeed);
-
-        // Change the alpha value of the fade blinder
-        FadeBlinder.color = new Color(FadeBlinder.color.r, FadeBlinder.color.g, FadeBlinder.color.b,
-            Mathf.MoveTowards(FadeBlinder.color.a, Blinded ? 1 : 0, Time.deltaTime * BlindSpeed));*/
     }
 
     public void Blind(InputAction.CallbackContext context)
@@ -85,19 +80,61 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void Blink(float Speed)
-    {
-        // Change the scale of the growth blinder
-        GrowthBlinder.transform.localScale = Vector3.MoveTowards(GrowthBlinder.transform.localScale,
-                Blinded ? BlindedScale : initBlindScale, Time.deltaTime * Speed);
-
-        // Change the alpha value of the fade blinder
-        FadeBlinder.color = new Color(FadeBlinder.color.r, FadeBlinder.color.g, FadeBlinder.color.b,
-            Mathf.MoveTowards(FadeBlinder.color.a, Blinded ? 1 : 0, Time.deltaTime * Speed));
-    }
-
     public void PlayerDeath()
     {
-
+        Blinder.Blink();
+        PlayerDeathEvent.Invoke();
     }
+
+    /// <summary>
+    /// Claim the checkpoint at index and all the ones before it
+    /// </summary>
+    /// <param name="index"></param>
+    public static void ClaimCheckpoint(int index)
+    {
+        if (Instance.Blinded || Instance.Respawning) return;
+        var cp = Instance.Checkpoints[index];
+        cp.Claimed = true;
+        CurrentCheckpoint = cp;
+        for (int i = 0; i < index; i++)
+        {
+            Instance.Checkpoints[i].Claimed = true;
+        }
+    }
+
+    /// <summary>
+    /// Claim the checkpoint and all the ones before it 
+    /// <br></br>
+    /// > Slower than using an index
+    /// </summary>
+    /// <param name="cp"></param>
+    public static void ClaimCheckPoint(Checkpoint cp)
+    {
+        if (cp.Claimed || Instance.Blinded || Instance.Respawning) return;
+        int i = Instance.Checkpoints.IndexOf(cp);
+        if (i >= 0) ClaimCheckpoint(i);
+        else throw new System.Exception("Attempted to claim unknown checkpoint.");
+    }
+
+    #region Auto-Config Checkpoints
+    public bool AddCheckpoint(Checkpoint cp)
+    {
+        if (!Checkpoints.Contains(cp))
+        {
+            Checkpoints.Add(cp);
+            return true;
+        }
+        return false;
+    }
+
+    public bool RemoveCheckpoint(Checkpoint cp)
+    {
+        if (Checkpoints.Contains(cp))
+        {
+            Checkpoints.Remove(cp);
+            return true;
+        }
+        return false;
+    }
+    #endregion
 }

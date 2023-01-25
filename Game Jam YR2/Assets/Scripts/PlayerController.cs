@@ -68,6 +68,7 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (GameManager.Instance.Respawning) return; //do nothing if the player is dead
         GatherInput();
 
         UpdateGrounded();
