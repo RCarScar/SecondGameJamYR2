@@ -16,7 +16,7 @@ public class EnemyController : MonoBehaviour
     //Editor Assigned Variables
     [SerializeField] private GameManager gm;
     [SerializeField] private GameObject player;
-    [SerializeField] private float speed = 1, maxSpeed = 1, acceleration = 1, jumpPower, airAcceleration = 0.2f, peakGravity, targetDistance = 5; 
+    [SerializeField] private float speed = 1, maxSpeed = 1, acceleration = 1, jumpPower, airAcceleration = 0.2f, peakGravity, targetDistance = 5;
     [SerializeField] private int playerDirection = 1;
 
     //Ground Check Stuff
@@ -63,13 +63,14 @@ public class EnemyController : MonoBehaviour
 
         //Target Player
         playerDist = Mathf.Abs(transform.position.x - player.transform.position.x);
-        if(playerDist < targetDistance)
+        if (playerDist < targetDistance)
         {
             //Move towards Player
             PushPlayer(playerDirection);
 
-            //Jump if stuck on a block.
-            Navigate();
+            if (player.transform.position.y > transform.position.y)
+                //Jump if stuck on a block.
+                Navigate();
         }
 
         //If at the peak of jump, make gravity faster.
@@ -85,10 +86,10 @@ public class EnemyController : MonoBehaviour
 
         targetDistance = gm.Blinded == true ? 0 : originalTargetDistance;
     }
-    
+
     private void GravityChange()
     {
-        if(Grounded == true)
+        if (Grounded == true)
         {
             rb.gravityScale = 9.8f;
             jumpPeaked = false;
@@ -134,5 +135,13 @@ public class EnemyController : MonoBehaviour
         Gizmos.DrawSphere((Vector2)transform.position + Vector2.down, GCRadius);
         Gizmos.DrawSphere((Vector2)transform.position + Vector2.right / 2, GCRadius);
         Gizmos.DrawRay(transform.position + (playerDirection * Vector3.right), Vector2.down * Mathf.Infinity);
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.collider.gameObject == player)
+        {
+            GameManager.PlayerDeathEvent.Invoke();
+        }
     }
 }
