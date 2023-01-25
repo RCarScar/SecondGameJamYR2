@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlatformEffector2D))]
 public class OneWayPlatform : MonoBehaviour
 {
+    Collider2D m_collider;
     PlatformEffector2D m_PlatformEffector;
 
     bool flipped = false;
@@ -21,7 +22,7 @@ public class OneWayPlatform : MonoBehaviour
         m_PlatformEffector.rotationalOffset = flipped ? 180 : 0;
     }
 
-    private void OnCollisionStay2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
         if(collision.transform.CompareTag("Player") && GameManager.Actions.Game.Fall.IsPressed())
         {

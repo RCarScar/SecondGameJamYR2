@@ -2,6 +2,7 @@
 
 using UnityEngine;
 using UnityEngine.Events;
+using System.Reflection;
 
 [RequireComponent(typeof(Animation))]
 public class Blinder : MonoBehaviour
@@ -20,7 +21,7 @@ public class Blinder : MonoBehaviour
         anim.AddClip(OpenEyeClip, "Open");
         anim.AddClip(CloseEyeClip, "Close");
         anim.AddClip(BlinkClip, "Blink");
-        TestEvent.AddListener(Test);
+        TestEvent.AddListener(InvokeRespawnStart);
     }
 
     public void OpenEyes()
@@ -38,14 +39,17 @@ public class Blinder : MonoBehaviour
         anim.Play("Blink");
     }
 
-    public void CallMethod(string methodName)
+    public void InvokeRespawnStart()
     {
-        Invoke(methodName, 0);
+        GameManager.PlayerRespawnEvent.Invoke();
+        GameManager.Instance.Respawning = true;
+        Debug.Log("Respawn");
     }
-    
-    public void Test()
+
+    public void InvokeRespawnEnd()
     {
-        Debug.Log("Test");
+        GameManager.Instance.Respawning = false;
+        Debug.Log("Respawn Finished");
     }
 
     public void InvokeStartOpenEyes()
@@ -70,11 +74,5 @@ public class Blinder : MonoBehaviour
     {
         GameManager.CloseEyesVisualEvent.Invoke();
         Debug.Log("Close");
-    }
-
-    public void InvokeBlink()
-    {
-        GameManager.BlinkEvent.Invoke();
-        Debug.Log("Blink");
     }
 }

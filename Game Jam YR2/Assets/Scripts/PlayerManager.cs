@@ -1,6 +1,5 @@
 /* Made by Blake Rubadue */
 
-using Cinemachine;
 using UnityEditor.Presets;
 using UnityEngine;
 
@@ -21,10 +20,12 @@ public class PlayerManager : MonoBehaviour
         SubscribeEvents();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
+        if(collision.gameObject.CompareTag("Damager"))
+        {
+            GameManager.Instance.PlayerDeath();
+        }
     }
 
     void SubscribeEvents()
