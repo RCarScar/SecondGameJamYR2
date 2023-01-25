@@ -14,7 +14,6 @@ public class EnemyController : MonoBehaviour
 {
     #region Variables
     //Editor Assigned Variables
-    [SerializeField] private GameManager gm;
     [SerializeField] private GameObject player;
     [SerializeField] private float speed = 1, maxSpeed = 1, acceleration = 1, jumpPower, airAcceleration = 0.2f, peakGravity, targetDistance = 5;
     [SerializeField] private int playerDirection = 1;
@@ -42,7 +41,9 @@ public class EnemyController : MonoBehaviour
         playerRB = player.GetComponent<Rigidbody2D>();
         groundAcceleration = acceleration;
         rb = GetComponent<Rigidbody2D>();
+
         GameManager.CloseEyesVisualEvent.AddListener(EyesClosed);
+        GameManager.OpenEyesStartEvent.AddListener(EyesOpen);
     }
 
     void FixedUpdate()
@@ -57,6 +58,8 @@ public class EnemyController : MonoBehaviour
         db.left = (Physics2D.OverlapCircle((Vector2)transform.position + Vector2.left / 2, GCRadius, GCMask)) ? true : false;
         db.peakGravity = jumpPeaked;
         #endregion
+
+
 
         //The player direction is -1 if left, 1 if right.
         playerDirection = (int)Mathf.Sign(player.transform.position.x - transform.position.x);
@@ -82,9 +85,15 @@ public class EnemyController : MonoBehaviour
 
     private void EyesClosed()
     {
-        rb.velocity = gm.Blinded == true ? Vector3.zero : rb.velocity;
+        rb.velocity = GameManager.Instance.Blinded ? Vector3.zero : rb.velocity;
 
-        targetDistance = gm.Blinded == true ? 0 : originalTargetDistance;
+        targetDistance = 0;
+    }
+
+    private void EyesOpen()
+    {
+
+        targetDistance = originalTargetDistance;
     }
 
     private void GravityChange()
@@ -139,7 +148,7 @@ public class EnemyController : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.gameObject == player)
+        if (collision.collider.gameObject == player && GameManager.Instance.Blinded == false)
         {
             GameManager.PlayerDeathEvent.Invoke();
         }
