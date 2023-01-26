@@ -64,6 +64,13 @@ public class GameManager : MonoBehaviour
         AudioPlayer = GetComponent<SoundPlayer>();
 
         initBlindScale = GrowthBlinder.transform.localScale;
+
+        SubscribeEvents();
+    }
+
+    private void SubscribeEvents()
+    {
+        PlayerRespawnEvent.AddListener(RespawnPlayer);
     }
 
     public void Blind(InputAction.CallbackContext context)
@@ -84,6 +91,12 @@ public class GameManager : MonoBehaviour
     {
         Blinder.Blink();
         PlayerDeathEvent.Invoke();
+    }
+
+    public void RespawnPlayer()
+    {
+        var Player = PlayerManager.Instance; //shorthand
+        Player.transform.position = (Vector2) CurrentCheckpoint.transform.position + CurrentCheckpoint.SpawnOffset;
     }
 
     /// <summary>
