@@ -1,6 +1,8 @@
 /*Made by Ryan C.*/
-using Unity.VisualScripting.Dependencies.NCalc;
+using GGUtil; /* GGUtil is a helper library made by Blake Rubadue */
+using System.Collections;
 using UnityEngine;
+using UnityEngine.Tilemaps;
 
 [System.Serializable]
 public class Debugging
@@ -25,25 +27,32 @@ public class EnemyController : MonoBehaviour
     public LayerMask GCMask;
 
     //Variables Not Really Accessed in Editor
-    private Rigidbody2D playerRB;
-    private float timeKeeper, pastVelocity, playerDist, originalTargetDistance;
+    private float pastVelocity, playerDist, originalTargetDistance;
     private bool jumpPeaked = false;
     private Rigidbody2D rb;
     private float groundAcceleration = 1;
 
     [Header("Debugging Strictly")]
-    public Debugging db = new Debugging();
+    public Debugging db = new();
     #endregion
+
+    [Header("Wall Check")]
+    public float WallCheckDistance = 2f;
+    public LayerMask WallMask;
+
+    private Vector3 InitialPosition;
 
     void Start()
     {
         originalTargetDistance = targetDistance;
-        playerRB = player.GetComponent<Rigidbody2D>();
         groundAcceleration = acceleration;
         rb = GetComponent<Rigidbody2D>();
 
         GameManager.CloseEyesVisualEvent.AddListener(EyesClosed);
         GameManager.OpenEyesStartEvent.AddListener(EyesOpen);
+        GameManager.PlayerRespawnEvent.AddListener(Respawn);
+
+        InitialPosition = transform.position;
     }
 
     void FixedUpdate()
@@ -59,10 +68,10 @@ public class EnemyController : MonoBehaviour
         db.peakGravity = jumpPeaked;
         #endregion
 
-
+        if (GameManager.Instance.Respawning) return;
 
         //The player direction is -1 if left, 1 if right.
-        playerDirection = (int)Mathf.Sign(player.transform.position.x - transform.position.x);
+        playerDirection = (int) Mathf.Sign(player.transform.position.x - transform.position.x);
 
         //Target Player
         playerDist = Mathf.Abs(transform.position.x - player.transform.position.x);
@@ -71,13 +80,11 @@ public class EnemyController : MonoBehaviour
             //Move towards Player
             PushPlayer(playerDirection);
 
-            if (player.transform.position.y > transform.position.y)
-                //Jump if stuck on a block.
-                Navigate();
+            Navigate();
         }
 
         //If at the peak of jump, make gravity faster.
-        GravityChange();
+        //GravityChange(); //Incompatible with jump height calculation
 
         //If in the air, set the acceleration to the air acceleration.
         acceleration = Grounded ? groundAcceleration : airAcceleration;
@@ -96,6 +103,7 @@ public class EnemyController : MonoBehaviour
         targetDistance = originalTargetDistance;
     }
 
+    //Incompatible with jump height calculation
     private void GravityChange()
     {
         if (Grounded == true)
@@ -112,18 +120,42 @@ public class EnemyController : MonoBehaviour
         }
         else
         {
-            timeKeeper = Time.time;
             pastVelocity = rb.velocity.y;
         }
     }
 
+    private bool Jumping = false;
     private void Navigate()
     {
-        //Left & Right Wall Collision Detection and Velocity Set
+
+        /*//Left & Right Wall Collision Detection and Velocity Set
         rb.velocity = Physics2D.OverlapCircle((Vector2)transform.position + Vector2.right / 2, GCRadius, GCMask)
             || Physics2D.OverlapCircle((Vector2)transform.position + Vector2.left / 2, GCRadius, GCMask)
             ? new Vector2(rb.velocity.x, rb.velocity.y + jumpPower)
-            : rb.velocity;
+            : rb.velocity;*/
+
+        /* Made by Blake Rubadue */
+        if (!Grounded || Jumping) return; //can't jump if not grounded so don't do anything
+
+        var pDir = new Vector2(playerDirection, 0);
+
+        var hit = Physics2D.Raycast(transform.position, pDir, WallCheckDistance, WallMask);
+
+        if (hit.collider == null) return;
+        var Tilemap = hit.collider.GetComponent<Tilemap>();
+        if (!Tilemap) return; //GetSurfaceHeight requires a tilemap
+
+        var height = GGMath.GetSurfaceHeight(hit.point + pDir * 0.1f, Tilemap) + 1.5f;
+
+        var gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
+
+        float force = Mathf.Sqrt(2 * height * gravity); //normally this would be (jumpDuration^2), but jump duration already had a sqrt so they cancel out and don't need to be performed
+        //float jumpDuration = 2 * force / gravity;
+
+        Debug.Log($"Height: {height}, Force: {force}");
+
+        rb.velocity = (new Vector2(rb.velocity.x, (force)));
+
     }
 
     private void PushPlayer(int playerDirection = 1)
@@ -133,7 +165,12 @@ public class EnemyController : MonoBehaviour
         rb.velocity = new Vector2(Mathf.MoveTowards(rb.velocity.x, playerDirection * maxSpeed, Time.fixedDeltaTime * acceleration), rb.velocity.y);
     }
 
-    private bool Grounded => Physics2D.OverlapCircle((Vector2)transform.position + Vector2.down, GCRadius, GCMask);
+    private void Respawn()
+    {
+        transform.position = InitialPosition;
+    }
+
+    private bool Grounded => Physics2D.OverlapCircle((Vector2)transform.position + GCPosition, GCRadius, GCMask);
 
     private bool GroundAhead => Physics2D.Raycast((Vector2)transform.position + (playerDirection * Vector2.right), Vector2.down * Mathf.Infinity);
 
@@ -141,7 +178,7 @@ public class EnemyController : MonoBehaviour
     {
         Gizmos.color = Color.green;
         Gizmos.DrawSphere((Vector2)transform.position + Vector2.left / 2, GCRadius);
-        Gizmos.DrawSphere((Vector2)transform.position + Vector2.down, GCRadius);
+        Gizmos.DrawSphere((Vector2)transform.position + GCPosition, GCRadius);
         Gizmos.DrawSphere((Vector2)transform.position + Vector2.right / 2, GCRadius);
         Gizmos.DrawRay(transform.position + (playerDirection * Vector3.right), Vector2.down * Mathf.Infinity);
     }

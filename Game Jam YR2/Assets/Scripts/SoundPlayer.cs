@@ -44,7 +44,7 @@ namespace Sounds
         public AudioSource PlaySound(Sound sound, Vector3 position, float volumeMod = 1, float pitchMod = 1)
         {
             AudioClip clip = sound.GetRandomClip();
-            GameObject obj = new GameObject();
+            GameObject obj = new();
             AudioSource source = obj.AddComponent<AudioSource>();
 
             obj.name = clip.name;
