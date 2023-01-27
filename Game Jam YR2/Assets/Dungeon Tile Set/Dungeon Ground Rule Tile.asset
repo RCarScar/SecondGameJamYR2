@@ -100,7 +100,7 @@ MonoBehaviour:
     - {x: -1, y: 0, z: 0}
     - {x: 1, y: 0, z: 0}
     m_RuleTransform: 3
-  - m_Id: 0
+  - m_Id: 10
     m_Sprites:
     - {fileID: 1284716984, guid: 055ff33453b45604daad02531cc09258, type: 3}
     m_GameObject: {fileID: 0}
