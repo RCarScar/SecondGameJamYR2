@@ -68,6 +68,16 @@ public class EnemyController : MonoBehaviour
         db.peakGravity = jumpPeaked;
         #endregion
 
+        /* Ryan Chen Hereby Takes This territory of this Script All Rights Reserved Copyright © 1976-2039 Property of El Ryano Cheno The 4th Dukess Supreme */
+        if (rb.velocity.y < 0)
+        {
+            rb.gravityScale = 6;
+        }
+        else
+            rb.gravityScale = 3;
+
+        /* End Copyright */
+
         if (GameManager.Instance.Respawning) return;
 
         //The player direction is -1 if left, 1 if right.
@@ -103,27 +113,6 @@ public class EnemyController : MonoBehaviour
         targetDistance = originalTargetDistance;
     }
 
-    //Incompatible with jump height calculation
-    private void GravityChange()
-    {
-        if (Grounded == true)
-        {
-            rb.gravityScale = 9.8f;
-            jumpPeaked = false;
-            return;
-        }
-
-        if (pastVelocity < rb.velocity.x)
-        {
-            jumpPeaked = true;
-            rb.gravityScale = peakGravity;
-        }
-        else
-        {
-            pastVelocity = rb.velocity.y;
-        }
-    }
-
     private bool Jumping = false;
     private void Navigate()
     {
@@ -134,27 +123,51 @@ public class EnemyController : MonoBehaviour
             ? new Vector2(rb.velocity.x, rb.velocity.y + jumpPower)
             : rb.velocity;*/
 
+        /* Made by Ryan Chen */
+        if (rb.velocity.y < 0.1f && Grounded == true && (playerDirection == 1
+            && Physics2D.OverlapCircle((Vector2)transform.position + Vector2.right * 1.2f, GCRadius, GCMask)
+            || playerDirection == -1
+            && Physics2D.OverlapCircle((Vector2)transform.position + Vector2.left * 1.2f, GCRadius, GCMask)))
+        {
+            float jumpHeight = 1;
+            for(int i = 1; i < 10; i++)
+            {
+                RaycastHit2D ray = Physics2D.Raycast((Vector2)transform.position + (Vector2.up * i), Vector2.right * playerDirection, 3);
+                if(ray.collider == null)
+                {
+                    jumpHeight = i;
+                    break;
+                }
+            }
+   
+            rb.velocity = rb.velocity + new Vector2(0, jumpPower * jumpHeight);
+            Debug.Log(jumpHeight + ", " + jumpPower);
+        }
+
+
         /* Made by Blake Rubadue */
-        if (!Grounded || Jumping) return; //can't jump if not grounded so don't do anything
+        /* Commented out by Ryan Chen */
+        /* Push */
+        //if (!Grounded || Jumping) return; //can't jump if not grounded so don't do anything
 
-        var pDir = new Vector2(playerDirection, 0);
+        //var pDir = new Vector2(playerDirection, 0);
 
-        var hit = Physics2D.Raycast(transform.position, pDir, WallCheckDistance, WallMask);
+        //var hit = Physics2D.Raycast(transform.position, pDir, WallCheckDistance, WallMask);
 
-        if (hit.collider == null) return;
-        var Tilemap = hit.collider.GetComponent<Tilemap>();
-        if (!Tilemap) return; //GetSurfaceHeight requires a tilemap
+        //if (hit.collider == null) return;
+        //var Tilemap = hit.collider.GetComponent<Tilemap>();
+        //if (!Tilemap) return; //GetSurfaceHeight requires a tilemap
 
-        var height = GGMath.GetSurfaceHeight(hit.point + pDir * 0.1f, Tilemap) + 1.5f;
+        //var height = GGMath.GetSurfaceHeight(hit.point + pDir * 0.1f, Tilemap) + 1.5f;
 
-        var gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
+        //var gravity = Mathf.Abs(Physics2D.gravity.y * rb.gravityScale);
 
-        float force = Mathf.Sqrt(2 * height * gravity); //normally this would be (jumpDuration^2), but jump duration already had a sqrt so they cancel out and don't need to be performed
+        //float force = Mathf.Sqrt(2 * height * gravity); //normally this would be (jumpDuration^2), but jump duration already had a sqrt so they cancel out and don't need to be performed
         //float jumpDuration = 2 * force / gravity;
 
-        Debug.Log($"Height: {height}, Force: {force}");
+        //Debug.Log($"Height: {height}, Force: {force}");
 
-        rb.velocity = (new Vector2(rb.velocity.x, (force)));
+        //rb.velocity = (new Vector2(rb.velocity.x, (force)));
 
     }
 

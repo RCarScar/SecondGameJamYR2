@@ -1,99 +1,95 @@
-using System.Collections;
+/*Ryan Chen*/
 using System.Collections.Generic;
-using Unity.Burst.CompilerServices;
-using Unity.VisualScripting;
 using UnityEngine;
 
-public enum enemyState
+[ExecuteInEditMode]
+public class EditorScript : MonoBehaviour
 {
-    idle,
-    running,
-    jumping,
-    falling,
-    blind
+    [ExecuteInEditMode]
+    void OnEnable()
+    {
+        EnemyAnimation.instance.animations = new AnimationInformation[5];
+        AnimationInformation[] plagarism = new AnimationInformation[] { new AnimationInformation("Idle"), new AnimationInformation("Running"), new AnimationInformation("Blinded"), new AnimationInformation("Jumping"), new AnimationInformation("Falling") };
+        EnemyAnimation.instance.animations = plagarism;
+        EnemyAnimation.instance.animations[0].type = "Idle";
+        EnemyAnimation.instance.animations[1].type = "Running";
+        EnemyAnimation.instance.animations[2].type = "Blinded";
+        EnemyAnimation.instance.animations[3].type = "Jumping";
+        EnemyAnimation.instance.animations[4].type = "Falling";
+    }
 }
 [System.Serializable]
-public class animationInfo
+public class AnimationInformation
 {
-    public AnimationClip anim;
-    public enemyState state;
-    public float length;
+    public AnimationInformation(string typee, AnimationClip clipe = null)
+    {
+        type = typee;
+        clip = clipe;
+    }
+    public string type; 
+    public AnimationClip clip;
 }
-
 
 public class EnemyAnimation : MonoBehaviour
 {
-    static public EnemyAnimation Instance;
-    enemyState state = enemyState.idle;
-    [SerializeField] private EnemyController ec;
-    [SerializeField] private int playerDirection = 1;
-    [SerializeField] private Rigidbody2D rb;
-    [SerializeField] public animationInfo[] animations;
+    static public EnemyAnimation instance;
+    public AnimationInformation[] animations = new AnimationInformation[]{new AnimationInformation("Idle"),new AnimationInformation("Running"),new AnimationInformation("Blinded"),new AnimationInformation("Jumping"),new AnimationInformation("Falling")};
+
+
+    private Animator animator;
+    private Rigidbody2D rb;
+
     private void Awake()
     {
-        Instance = this;
+        instance = this;
     }
-
-    void Start()
+    private void Start()
     {
-        for (int i = 0; i < animations.Length; i++)
-        {
-            animations[i].length = animations[i].anim.length;
-        }
+        animator = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
     }
-
-    void Update()
+    private void Update()
     {
-        playerDirection = PlayerController.Instance.gameObject.transform.position.x > transform.position.x ? -1 : 1;
+        if(rb.velocity.x < -0.01f)
+        {
+            transform.localScale = new Vector2(1,1);
+        }
+        else if (rb.velocity.x > 0.01f)
+        {
+            transform.localScale = new Vector2(-1, 1);
+        }
 
-        gameObject.transform.localScale = new Vector3(Mathf.Abs(transform.localScale.x) * playerDirection, transform.localScale.y, 0);
-
-        SetStates();
-
-        CheckStates();
+        if (animator.GetCurrentAnimatorStateInfo(0).length > animator.GetCurrentAnimatorStateInfo(0).normalizedTime)
+        {
+            animator.Play(CheckStates().clip.name);
+        }
     }
 
-    private AnimationClip CheckStates()
+    private AnimationInformation CheckStates()
     {
-        for(int i = 0; i < animations.Length; i++)
+        if (GameManager.Instance.Blinded)
         {
-            if (animations[i].state == state)
-            {
-                return animations[i].anim;
-            }
+            return animations[2];
         }
-
-        return animations[0].anim;
-    }
-
-    private void SetStates()
-    {
-        //If the velocity of Y is greater than 0, enemy is jumping.
-        if (rb.velocity.y > 0)
+        //Running
+        else if (Mathf.Abs(rb.velocity.x) > 0.01f && Mathf.Abs(rb.velocity.y) < 0.1f)
         {
-            state = enemyState.jumping;
+            return animations[1];
         }
-        //Blind if blind.
-        if (GameManager.Instance.Blinded == true)
+        //Jumping
+        else if (rb.velocity.y > 0.01f)
         {
-            state = enemyState.blind;
+            return animations[3];
         }
-        //If the player has 0 velocity, idle.
-        if (rb.velocity.x == 0 && rb.velocity.y == 0)
+        //Falling
+        else if (rb.velocity.y < 0.01f)
         {
-            state = enemyState.idle;
+            return animations[4];
         }
-        //If not in the air and moving in the x, running.
-        else if (rb.velocity.y == 0 && rb.velocity.x > 0)
+        //Idle
+        else
         {
-            state = enemyState.running;
+            return animations[0];
         }
-        //If the enemy is going down, falling.
-        if (rb.velocity.y < 0)
-        {
-            state = enemyState.falling;
-        }
-
     }
 }
