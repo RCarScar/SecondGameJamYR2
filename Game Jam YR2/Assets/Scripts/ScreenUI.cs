@@ -5,6 +5,7 @@ using UnityEngine.UI;
 
 public class ScreenUI : MonoBehaviour
 {
+    public string Game;
     [SerializeField] private GameObject instructions;
 
     private void Start()
@@ -14,7 +15,7 @@ public class ScreenUI : MonoBehaviour
 
     public void Play()
     {
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);
+        SceneManager.LoadScene(Game);
     }
 
     public void Instructions()
