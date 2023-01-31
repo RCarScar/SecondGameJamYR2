@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[ExecuteInEditMode]
 public class EditorScript : MonoBehaviour
 {
-    [ExecuteInEditMode]
     void OnEnable()
     {
         EnemyAnimation.instance.animations = new AnimationInformation[5];
