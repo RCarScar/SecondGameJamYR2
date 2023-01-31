@@ -2,6 +2,7 @@
 using GGUtil; /* GGUtil is a helper library made by Blake Rubadue */
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.Tilemaps;
 
 [System.Serializable]
@@ -17,7 +18,7 @@ public class EnemyController : MonoBehaviour
     #region Variables
     //Editor Assigned Variables
     [SerializeField] private GameObject player;
-    [SerializeField] private float speed = 1, maxSpeed = 1, acceleration = 1, jumpPower, airAcceleration = 0.2f, peakGravity, targetDistance = 5;
+    [SerializeField] private float maxSpeed = 1, acceleration = 1, jumpPower, airAcceleration = 0.2f, peakGravity, targetDistance = 5;
     [SerializeField] private int playerDirection = 1;
 
     //Ground Check Stuff
@@ -41,6 +42,8 @@ public class EnemyController : MonoBehaviour
     public LayerMask WallMask;
 
     private Vector3 InitialPosition;
+
+    [HideInInspector] public UnityEvent JumpEvent = new();
 
     void Start()
     {
@@ -139,7 +142,9 @@ public class EnemyController : MonoBehaviour
                     break;
                 }
             }
-   
+
+            JumpEvent.Invoke();
+
             rb.velocity = rb.velocity + new Vector2(0, jumpPower * jumpHeight);
             Debug.Log(jumpHeight + ", " + jumpPower);
         }
@@ -183,16 +188,16 @@ public class EnemyController : MonoBehaviour
         transform.position = InitialPosition;
     }
 
-    private bool Grounded => Physics2D.OverlapCircle((Vector2)transform.position + GCPosition, GCRadius, GCMask);
+    public bool Grounded => Physics2D.OverlapCircle((Vector2)transform.position + GCPosition, GCRadius, GCMask);
 
     private bool GroundAhead => Physics2D.Raycast((Vector2)transform.position + (playerDirection * Vector2.right), Vector2.down * Mathf.Infinity);
 
     private void OnDrawGizmos()
     {
         Gizmos.color = Color.green;
-        Gizmos.DrawSphere((Vector2)transform.position + Vector2.left / 2, GCRadius);
+        //Gizmos.DrawSphere((Vector2)transform.position + Vector2.left / 2, GCRadius);
         Gizmos.DrawSphere((Vector2)transform.position + GCPosition, GCRadius);
-        Gizmos.DrawSphere((Vector2)transform.position + Vector2.right / 2, GCRadius);
+        //Gizmos.DrawSphere((Vector2)transform.position + Vector2.right / 2, GCRadius);
         Gizmos.DrawRay(transform.position + (playerDirection * Vector3.right), Vector2.down * Mathf.Infinity);
     }
 
