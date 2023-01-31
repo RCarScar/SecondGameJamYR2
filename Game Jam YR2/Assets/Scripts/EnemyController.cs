@@ -17,6 +17,7 @@ public class EnemyController : MonoBehaviour
 {
     #region Variables
     //Editor Assigned Variables
+    static public EnemyController Instance;
     [SerializeField] private GameObject player;
     [SerializeField] private float maxSpeed = 1, acceleration = 1, jumpPower, airAcceleration = 0.2f, peakGravity, targetDistance = 5;
     [SerializeField] private int playerDirection = 1;
@@ -44,6 +45,11 @@ public class EnemyController : MonoBehaviour
     private Vector3 InitialPosition;
 
     [HideInInspector] public UnityEvent JumpEvent = new();
+
+    private void Awake()
+    {
+        Instance = this;
+    }
 
     void Start()
     {
